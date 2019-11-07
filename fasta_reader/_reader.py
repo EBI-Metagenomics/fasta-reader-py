@@ -1,7 +1,7 @@
-from more_itertools import peekable
-import itertools
 import pathlib
 from typing import IO, Iterator, List, NamedTuple, Union
+
+from more_itertools import peekable
 
 
 class ParsingError(Exception):
@@ -71,7 +71,11 @@ class FASTAParser:
                 raise ParsingError()
 
     def _sequence_continues(self):
-        next_line = self._lines.peek()
+        try:
+            next_line = self._lines.peek()
+        except StopIteration:
+            return False
+
         if next_line == "":
             return False
         next_line = next_line.strip()

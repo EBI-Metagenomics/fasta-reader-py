@@ -2,12 +2,13 @@ import pytest
 from fasta_reader import open_fasta, ParsingError
 
 
-def test_fasta_correct():
+def _test_fasta_correct(filepath):
+    pass
 
     deflines = ["ID1", "ID2", "ID3", "ID4"]
     sequences = ["GAGUUA", "CAUAACAAATT", "AAGAA", "AAGAA"]
 
-    f = open_fasta("fasta_reader/test/correct.seq")
+    f = open_fasta(filepath)
     item = f.read_item()
     assert item.defline == deflines[0]
     assert item.sequence == sequences[0]
@@ -29,26 +30,34 @@ def test_fasta_correct():
 
     f.close()
 
-    f = open_fasta("fasta_reader/test/correct.seq")
+    f = open_fasta(filepath)
     for i, item in enumerate(f):
         assert item.defline == deflines[i]
         assert item.sequence == sequences[i]
     f.close()
 
-    f = open_fasta("fasta_reader/test/correct.seq")
+    f = open_fasta(filepath)
     items = f.read_items()
     for i in range(len(deflines)):
         assert items[i].defline == deflines[i]
         assert items[i].sequence == sequences[i]
     f.close()
 
-    with open_fasta("fasta_reader/test/correct.seq") as f:
+    with open_fasta(filepath) as f:
         for i, item in enumerate(f):
             assert item.defline == deflines[i]
             assert item.sequence == sequences[i]
 
-    with open_fasta("fasta_reader/test/correct.seq") as f:
+    with open_fasta(filepath) as f:
         f.close()
+
+
+def test_fasta_correct1():
+    _test_fasta_correct("fasta_reader/test/correct1.seq")
+
+
+def test_fasta_correct2():
+    _test_fasta_correct("fasta_reader/test/correct2.seq")
 
 
 def test_fasta_damaged():
