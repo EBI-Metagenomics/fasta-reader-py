@@ -1,2 +1,2 @@
-# hmmer-reader-py
-HMMER file reader.
+# fasta-reader-py
+FASTA file reader.
