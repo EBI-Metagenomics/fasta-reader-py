@@ -24,6 +24,14 @@ jobs:
       run: |
         pip install pytest
         pytest
+    - name: Install it
+      run: |
+        pip install .
+    - name: Test installation
+      run: |
+        pushd ~/
+        python -c "import sys; import fasta_reader; sys.exit(fasta_reader.test())"
+        popd
     - name: Build source distribution
       run: |
         python setup.py sdist
