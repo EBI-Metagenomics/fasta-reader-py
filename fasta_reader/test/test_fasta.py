@@ -52,25 +52,25 @@ def _test_fasta_correct(filepath):
         f.close()
 
 
-def test_fasta_correct1():
-    _test_fasta_correct("fasta_reader/test/correct1.seq")
+def test_fasta_correct1(correct1):
+    _test_fasta_correct(correct1)
 
 
-def test_fasta_correct2():
-    _test_fasta_correct("fasta_reader/test/correct2.seq")
+def test_fasta_correct2(correct2):
+    _test_fasta_correct(correct2)
 
 
-def test_fasta_damaged():
+def test_fasta_damaged(damaged1, damaged2, damaged3):
 
-    with open_fasta("fasta_reader/test/damaged1.seq") as f:
+    with open_fasta(damaged1) as f:
         with pytest.raises(ParsingError):
             f.read_item()
 
-    with open_fasta("fasta_reader/test/damaged2.seq") as f:
+    with open_fasta(damaged2) as f:
         with pytest.raises(ParsingError):
             f.read_item()
 
-    with open_fasta("fasta_reader/test/damaged3.seq") as f:
+    with open_fasta(damaged3) as f:
         f.read_item()
         with pytest.raises(ParsingError):
             f.read_item()
