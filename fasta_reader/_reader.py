@@ -100,13 +100,12 @@ class FASTAParser:
 
 def open_fasta(file: Union[str, pathlib.Path, IO[str]]) -> FASTAParser:
     """
-    Open a FASTA a file.
+    Open a FASTA file.
 
     Parameters
     ----------
     file : Union[str, pathlib.Path, IO[str]]
         File path or IO stream.
-
 
     Returns
     -------
