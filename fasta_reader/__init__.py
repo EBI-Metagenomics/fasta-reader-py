@@ -1,15 +1,17 @@
-from ._parser import FASTAParser, Item, ParsingError, open_fasta
-from ._writer import FASTAWriter
+from ._cli import cli
+from ._parser import FASTAItem, FASTAParser, ParsingError, open_fasta
 from ._testit import test
+from ._writer import FASTAWriter
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 __all__ = [
-    "__version__",
-    "test",
-    "open_fasta",
+    "FASTAItem",
     "FASTAParser",
-    "ParsingError",
-    "Item",
     "FASTAWriter",
+    "ParsingError",
+    "__version__",
+    "cli",
+    "open_fasta",
+    "test",
 ]

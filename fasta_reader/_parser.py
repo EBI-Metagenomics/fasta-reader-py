@@ -8,7 +8,7 @@ class ParsingError(Exception):
     pass
 
 
-Item = NamedTuple("Item", [("defline", str), ("sequence", str)])
+FASTAItem = NamedTuple("FASTAItem", [("defline", str), ("sequence", str)])
 
 
 class FASTAParser:
@@ -22,19 +22,19 @@ class FASTAParser:
         self._file = file
         self._lines = peekable(line for line in file)
 
-    def read_item(self) -> Item:
+    def read_item(self) -> FASTAItem:
         """
         Get the next item.
         """
         defline = self._next_defline()
         sequence = self._next_sequence()
-        return Item(defline, sequence)
+        return FASTAItem(defline, sequence)
 
-    def read_items(self) -> List[Item]:
+    def read_items(self) -> List[FASTAItem]:
         """
         Get the list of all items.
         """
-        return [item for item in self]
+        return list(self)
 
     def close(self):
         """
@@ -51,7 +51,7 @@ class FASTAParser:
             line = line.strip()
             if line.startswith(">"):
                 return line[1:]
-            elif line != "":
+            if line != "":
                 raise ParsingError()
 
     def _next_sequence(self) -> str:
@@ -67,7 +67,7 @@ class FASTAParser:
                 if self._sequence_continues():
                     continue
                 return "".join(lines)
-            elif line != "":
+            if line != "":
                 raise ParsingError()
 
     def _sequence_continues(self):
@@ -81,7 +81,7 @@ class FASTAParser:
         next_line = next_line.strip()
         return len(next_line) > 0 and not next_line.startswith(">")
 
-    def __iter__(self) -> Iterator[Item]:
+    def __iter__(self) -> Iterator[FASTAItem]:
         while True:
             try:
                 yield self.read_item()
