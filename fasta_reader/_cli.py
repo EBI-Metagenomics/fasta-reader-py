@@ -6,22 +6,13 @@ from ._parser import open_fasta
 
 
 def get_version():
-    import pkg_resources
     import re
-    from os.path import realpath, dirname, join
+    import fasta_reader
+    import importlib_resources as pkg_resources
 
-    if __name__ == "__main__":
-        filepath = join(dirname(realpath(__file__)), "..", "__init__.py")
-        with open(filepath, "r", encoding="utf8") as f:
-            content = f.read()
-    else:
-        content = pkg_resources.resource_string(__name__.split(".")[0], "__init__.py")
-        content = content.decode()
-
+    content = pkg_resources.read_text(fasta_reader, "__init__.py")
     c = re.compile(r"__version__ *= *('[^']+'|\"[^\"]+\")")
     m = c.search(content)
-    if m is None:
-        return "unknown"
     return m.groups()[0][1:-1]
 
 
