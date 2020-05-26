@@ -2,8 +2,8 @@ from ._cli import cli
 from ._parser import FASTAItem, FASTAParser, ParsingError, open_fasta
 from ._testit import test
 from ._writer import FASTAWriter
+from ._version import __version__
 
-__version__ = "0.0.4"
 
 __all__ = [
     "FASTAItem",

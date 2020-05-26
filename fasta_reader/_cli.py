@@ -3,19 +3,11 @@ from statistics import mean
 import click
 
 from ._parser import open_fasta
-
-
-def get_version():
-    try:
-        from importlib import metadata
-    except ImportError:
-        # Running on pre-3.8 Python; use importlib-metadata package
-        import importlib_metadata as metadata
-    return metadata.version("fasta-reader")
+from ._version import __version__
 
 
 @click.command(context_settings=dict(help_option_names=["-h", "--help"]))
-@click.version_option(get_version())
+@click.version_option(__version__)
 @click.argument("fasta", type=click.File("r"))
 def cli(fasta):
     """
