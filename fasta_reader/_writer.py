@@ -8,7 +8,7 @@ class FASTAWriter:
             file = pathlib.Path(file)
 
         if isinstance(file, pathlib.Path):
-            file = open(file, "r")
+            file = open(file, "w")
 
         self._file = file
 
