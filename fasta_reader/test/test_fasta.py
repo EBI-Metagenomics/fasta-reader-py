@@ -1,5 +1,6 @@
 import pytest
-from fasta_reader import open_fasta, ParsingError
+
+from fasta_reader import ParsingError, open_fasta
 
 
 def _test_fasta_correct(filepath):

@@ -1,12 +1,9 @@
-import sys
 import pathlib
 from typing import IO, Union
 
 
 class FASTAWriter:
-    def __init__(
-        self, file: Union[str, pathlib.Path, IO[str]], ncols: int = sys.maxsize
-    ):
+    def __init__(self, file: Union[str, pathlib.Path, IO[str]], ncols: int = 60):
         if isinstance(file, str):
             file = pathlib.Path(file)
 

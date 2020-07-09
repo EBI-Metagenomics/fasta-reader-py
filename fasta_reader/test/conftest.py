@@ -28,6 +28,7 @@ def damaged3(tmp_path):
 
 def _write_file(path, filename):
     import importlib_resources as pkg_resources
+
     import fasta_reader
 
     text = pkg_resources.read_text(fasta_reader.test, filename)
