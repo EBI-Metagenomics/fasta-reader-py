@@ -1,5 +1,6 @@
 import pathlib
-from typing import IO, Iterator, List, NamedTuple, Union
+from dataclasses import dataclass
+from typing import IO, Iterator, List, Union
 
 from more_itertools import peekable
 
@@ -8,7 +9,23 @@ class ParsingError(Exception):
     pass
 
 
-FASTAItem = NamedTuple("FASTAItem", [("defline", str), ("sequence", str)])
+@dataclass
+class FASTAItem:
+    defline: str
+    sequence: str
+
+    @property
+    def id(self) -> str:
+        return self.defline.split()[0]
+
+    @property
+    def desc(self) -> str:
+        tgt_id = self.id
+        return self.defline[len(tgt_id) + 1 :]
+
+    def __iter__(self):
+        yield self.defline
+        yield self.sequence
 
 
 class FASTAParser:

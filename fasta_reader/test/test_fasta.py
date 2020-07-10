@@ -4,26 +4,32 @@ from fasta_reader import ParsingError, open_fasta
 
 
 def _test_fasta_correct(filepath):
-    pass
-
     deflines = ["ID1", "ID2", "ID3", "ID4"]
     sequences = ["GAGUUA", "CAUAACAAATT", "AAGAA", "AAGAA"]
 
     f = open_fasta(filepath)
     item = f.read_item()
     assert item.defline == deflines[0]
+    assert item.id == deflines[0]
+    assert item.desc == ""
     assert item.sequence == sequences[0]
 
     item = f.read_item()
     assert item.defline == deflines[1]
+    assert item.id == deflines[1]
+    assert item.desc == ""
     assert item.sequence == sequences[1]
 
     item = f.read_item()
     assert item.defline == deflines[2]
+    assert item.id == deflines[2]
+    assert item.desc == ""
     assert item.sequence == sequences[2]
 
     item = f.read_item()
     assert item.defline == deflines[3]
+    assert item.id == deflines[3]
+    assert item.desc == ""
     assert item.sequence == sequences[3]
 
     with pytest.raises(StopIteration):
@@ -39,8 +45,8 @@ def _test_fasta_correct(filepath):
 
     f = open_fasta(filepath)
     items = f.read_items()
-    for i in range(len(deflines)):
-        assert items[i].defline == deflines[i]
+    for i, defline in enumerate(deflines):
+        assert items[i].defline == defline
         assert items[i].sequence == sequences[i]
     f.close()
 
