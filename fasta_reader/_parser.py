@@ -19,7 +19,13 @@ class FASTAItem:
         return self.defline.split()[0]
 
     @property
+    def has_desc(self) -> bool:
+        return len(self.defline.split()) > 1
+
+    @property
     def desc(self) -> str:
+        if not self.has_desc:
+            raise RuntimeError("It does not have a description.")
         tgt_id = self.id
         return self.defline[len(tgt_id) + 1 :]
 

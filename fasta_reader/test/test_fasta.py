@@ -11,25 +11,25 @@ def _test_fasta_correct(filepath):
     item = f.read_item()
     assert item.defline == deflines[0]
     assert item.id == deflines[0]
-    assert item.desc == ""
+    assert not item.has_desc
     assert item.sequence == sequences[0]
 
     item = f.read_item()
     assert item.defline == deflines[1]
     assert item.id == deflines[1]
-    assert item.desc == ""
+    assert not item.has_desc
     assert item.sequence == sequences[1]
 
     item = f.read_item()
     assert item.defline == deflines[2]
     assert item.id == deflines[2]
-    assert item.desc == ""
+    assert not item.has_desc
     assert item.sequence == sequences[2]
 
     item = f.read_item()
     assert item.defline == deflines[3]
     assert item.id == deflines[3]
-    assert item.desc == ""
+    assert not item.has_desc
     assert item.sequence == sequences[3]
 
     with pytest.raises(StopIteration):
