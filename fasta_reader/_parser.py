@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pathlib
 from dataclasses import dataclass
 from typing import IO, Iterator, List, Union
@@ -18,6 +20,13 @@ class FASTAItem:
     def id(self) -> str:
         return self.defline.split()[0]
 
+    @id.setter
+    def id(self, val: str):
+        if self.has_desc:
+            self.defline = val + " " + self.desc
+        else:
+            self.defline = val
+
     @property
     def has_desc(self) -> bool:
         return len(self.defline.split()) > 1
@@ -32,6 +41,11 @@ class FASTAItem:
     def __iter__(self):
         yield self.defline
         yield self.sequence
+
+    def copy(self) -> FASTAItem:
+        from copy import copy
+
+        return copy(self)
 
 
 class FASTAParser:
