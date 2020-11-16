@@ -1,4 +1,4 @@
-import pathlib
+from pathlib import Path
 from typing import IO, Union
 
 from xopen import xopen
@@ -11,7 +11,7 @@ class FASTAWriter:
     FASTA writer.
     """
 
-    def __init__(self, file: Union[str, pathlib.Path, IO[str]], ncols: int = 60):
+    def __init__(self, file: Union[str, Path, IO[str]], ncols: int = 60):
         """
         Parameters
         ----------
@@ -21,9 +21,9 @@ class FASTAWriter:
             Number of columns of sequence output.
         """
         if isinstance(file, str):
-            file = pathlib.Path(file)
+            file = Path(file)
 
-        if isinstance(file, pathlib.Path):
+        if isinstance(file, Path):
             file = xopen(file, "w")
 
         self._file = file
@@ -61,7 +61,7 @@ class FASTAWriter:
         self.close()
 
 
-def write_fasta(file: Union[str, pathlib.Path, IO[str]], ncols=60) -> FASTAWriter:
+def write_fasta(file: Union[str, Path, IO[str]], ncols=60) -> FASTAWriter:
     """
     Open a FASTA file for writing.
 

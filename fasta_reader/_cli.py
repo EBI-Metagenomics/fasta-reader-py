@@ -8,13 +8,18 @@ from ._version import __version__
 
 @click.command(context_settings=dict(help_option_names=["-h", "--help"]))
 @click.version_option(__version__)
-@click.argument("fasta", type=click.File("r"))
+@click.argument("fasta", type=click.Path(exists=True))
 def cli(fasta):
     """
     Show information about FASTA files.
+
+    Warning
+    -------
+    The commad line interface is in EXPERIMENTAL stage. It might change in
+    future releases.
     """
-    with read_fasta(fasta) as parser:
-        items = parser.read_items()
+    with read_fasta(fasta) as file:
+        items = file.read_items()
 
     nitems = len(items)
     abc = set([])
