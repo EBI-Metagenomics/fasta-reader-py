@@ -4,3 +4,4 @@ more-itertools
 pytest
 setuptools
 wheel
+xopen

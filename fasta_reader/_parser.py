@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import IO, Iterator, List, Union
 
 from more_itertools import peekable
+from xopen import xopen
 
 __all__ = ["ParsingError", "FASTAItem", "FASTAParser", "open_fasta"]
 
@@ -135,7 +136,7 @@ class FASTAParser:
             file = pathlib.Path(file)
 
         if isinstance(file, pathlib.Path):
-            file = open(file, "r")
+            file = xopen(file, "r")
 
         self._file = file
         self._lines = peekable(line for line in file)
@@ -229,7 +230,7 @@ class FASTAParser:
 
 def open_fasta(file: Union[str, pathlib.Path, IO[str]]) -> FASTAParser:
     """
-    Open a FASTA file.
+    Open a FASTA file for reading.
 
     Parameters
     ----------

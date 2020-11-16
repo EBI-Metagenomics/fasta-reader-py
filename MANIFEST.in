@@ -1,8 +1,10 @@
 include LICENSE.md
 include README.md
-include fasta_reader/test/correct1.seq
-include fasta_reader/test/correct2.seq
-include fasta_reader/test/damaged1.seq
-include fasta_reader/test/damaged2.seq
-include fasta_reader/test/damaged3.seq
+include fasta_reader/test/correct1.faa
+include fasta_reader/test/correct2.faa
+include fasta_reader/test/damaged1.faa
+include fasta_reader/test/damaged2.faa
+include fasta_reader/test/damaged3.faa
+include fasta_reader/test/protein.faa
+include fasta_reader/test/protein.faa.gz
 include version.py

@@ -1,7 +1,7 @@
 import pathlib
 from typing import IO, Union
 
-__all__ = ["FASTAWriter"]
+__all__ = ["FASTAWriter", "write_fasta"]
 
 
 class FASTAWriter:
@@ -57,3 +57,19 @@ class FASTAWriter:
         del exception_value
         del traceback
         self.close()
+
+
+def write_fasta(file: Union[str, pathlib.Path, IO[str]], ncols=60) -> FASTAWriter:
+    """
+    Open a FASTA file for writing.
+
+    Parameters
+    ----------
+    file
+        File path or IO stream.
+
+    Returns
+    -------
+    FASTA writer.
+    """
+    return FASTAWriter(file, ncols)
