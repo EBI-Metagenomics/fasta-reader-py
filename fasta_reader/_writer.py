@@ -1,9 +1,23 @@
 import pathlib
 from typing import IO, Union
 
+__all__ = ["FASTAWriter"]
+
 
 class FASTAWriter:
+    """
+    FASTA writer.
+    """
+
     def __init__(self, file: Union[str, pathlib.Path, IO[str]], ncols: int = 60):
+        """
+        Parameters
+        ----------
+        file
+            File path or IO stream.
+        ncols
+            Number of columns of sequence output.
+        """
         if isinstance(file, str):
             file = pathlib.Path(file)
 
@@ -16,6 +30,13 @@ class FASTAWriter:
     def write_item(self, defline: str, sequence: str):
         """
         Write item.
+
+        Attributes
+        ----------
+        defline
+            Description line.
+        sequence
+            Sequence.
         """
         self._file.write(">" + defline + "\n")
         for i in range(0, len(sequence), self._ncols):

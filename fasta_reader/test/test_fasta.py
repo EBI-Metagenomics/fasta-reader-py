@@ -70,14 +70,20 @@ def test_fasta_correct2(correct2):
 def test_fasta_damaged(damaged1, damaged2, damaged3):
 
     with open_fasta(damaged1) as f:
-        with pytest.raises(ParsingError):
+        with pytest.raises(ParsingError) as excinfo:
             f.read_item()
+        e: ParsingError = excinfo.value
+        assert e.line_number == 1
 
     with open_fasta(damaged2) as f:
-        with pytest.raises(ParsingError):
+        with pytest.raises(ParsingError) as excinfo:
             f.read_item()
+        e: ParsingError = excinfo.value
+        assert e.line_number == 2
 
     with open_fasta(damaged3) as f:
         f.read_item()
-        with pytest.raises(ParsingError):
+        with pytest.raises(ParsingError) as excinfo:
             f.read_item()
+        e: ParsingError = excinfo.value
+        assert e.line_number == 4

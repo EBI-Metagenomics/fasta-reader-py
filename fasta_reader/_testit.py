@@ -1,16 +1,18 @@
-def test(verbose=True):
+__all__ = ["test"]
+
+
+def test(verbose=True) -> int:
     """
     Run tests to verify this package's integrity.
 
     Parameters
     ----------
-    verbose : bool
+    verbose
         ``True`` to show diagnostic. Defaults to ``True``.
 
     Returns
     -------
-    int
-        Exit code: ``0`` for success.
+    Exit code: ``0`` for success.
     """
 
     args = ["--doctest-modules", "-k", "not test_testit"]

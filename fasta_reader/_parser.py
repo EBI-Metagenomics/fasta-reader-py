@@ -6,18 +6,61 @@ from typing import IO, Iterator, List, Union
 
 from more_itertools import peekable
 
+__all__ = ["ParsingError", "FASTAItem", "FASTAParser", "open_fasta"]
+
 
 class ParsingError(Exception):
-    pass
+    """
+    Parsing error.
+    """
+
+    def __init__(self, line_number: int):
+        """
+        Parameters
+        ----------
+        line_number
+            Line number.
+        """
+        super().__init__(f"Line number {line_number}.")
+        self._line_number = line_number
+
+    @property
+    def line_number(self) -> int:
+        """
+        Line number.
+
+        Returns
+        -------
+        Line number.
+        """
+        return self._line_number
 
 
 @dataclass
 class FASTAItem:
+    """
+    FASTA item.
+
+    Attributes
+    ----------
+    defline
+        Description line.
+    sequence
+        Sequence.
+    """
+
     defline: str
     sequence: str
 
     @property
     def id(self) -> str:
+        """
+        Identification.
+
+        Returns
+        -------
+        Identification.
+        """
         return self.defline.split()[0]
 
     @id.setter
@@ -29,10 +72,31 @@ class FASTAItem:
 
     @property
     def has_desc(self) -> bool:
+        """
+        Does it has description?
+
+        Returns
+        -------
+        ``True`` if it does contain description; ``False`` otherwise.
+        """
         return len(self.defline.split()) > 1
 
     @property
     def desc(self) -> str:
+        """
+        Description (if any).
+
+        It will raise `RuntimeError` if it has no description.
+
+        Returns
+        -------
+        Description.
+
+        Raises
+        ------
+        RuntimeError
+            If it has no description.
+        """
         if not self.has_desc:
             raise RuntimeError("It does not have a description.")
         tgt_id = self.id
@@ -43,13 +107,30 @@ class FASTAItem:
         yield self.sequence
 
     def copy(self) -> FASTAItem:
+        """
+        Copy of itself.
+
+        Returns
+        -------
+        FASTA item.
+        """
         from copy import copy
 
         return copy(self)
 
 
 class FASTAParser:
+    """
+    FASTA parser.
+    """
+
     def __init__(self, file: Union[str, pathlib.Path, IO[str]]):
+        """
+        Parameters
+        ----------
+        file
+            File path or IO stream.
+        """
         if isinstance(file, str):
             file = pathlib.Path(file)
 
@@ -58,10 +139,15 @@ class FASTAParser:
 
         self._file = file
         self._lines = peekable(line for line in file)
+        self._line_number = 0
 
     def read_item(self) -> FASTAItem:
         """
         Get the next item.
+
+        Returns
+        -------
+        Next item.
         """
         defline = self._next_defline()
         sequence = self._next_sequence()
@@ -70,6 +156,10 @@ class FASTAParser:
     def read_items(self) -> List[FASTAItem]:
         """
         Get the list of all items.
+
+        Returns
+        -------
+        List of all items.
         """
         return list(self)
 
@@ -82,6 +172,7 @@ class FASTAParser:
     def _next_defline(self) -> str:
         while True:
             line = next(self._lines)
+            self._line_number += 1
             if line == "":
                 raise StopIteration
 
@@ -89,14 +180,15 @@ class FASTAParser:
             if line.startswith(">"):
                 return line[1:]
             if line != "":
-                raise ParsingError()
+                raise ParsingError(self._line_number)
 
     def _next_sequence(self) -> str:
         lines = []
         while True:
             line = next(self._lines)
+            self._line_number += 1
             if line == "":
-                raise ParsingError()
+                raise ParsingError(self._line_number)
 
             line = line.strip()
             if not line.startswith(">"):
@@ -105,7 +197,7 @@ class FASTAParser:
                     continue
                 return "".join(lines)
             if line != "":
-                raise ParsingError()
+                raise ParsingError(self._line_number)
 
     def _sequence_continues(self):
         try:
@@ -141,12 +233,11 @@ def open_fasta(file: Union[str, pathlib.Path, IO[str]]) -> FASTAParser:
 
     Parameters
     ----------
-    file : Union[str, pathlib.Path, IO[str]]
+    file
         File path or IO stream.
 
     Returns
     -------
-    parser : FASTAParser
-        FASTA parser.
+    FASTA parser.
     """
     return FASTAParser(file)
