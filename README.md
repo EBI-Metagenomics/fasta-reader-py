@@ -1,6 +1,6 @@
 # fasta-reader-py
 
-FASTA file reader.
+FASTA file reader/writer.
 
 ## Examples
 
