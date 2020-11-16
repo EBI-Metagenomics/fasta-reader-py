@@ -3,14 +3,14 @@ from pathlib import Path
 
 import pytest
 
-from fasta_reader import ParsingError, open_fasta, write_fasta
+from fasta_reader import ParsingError, read_fasta, write_fasta
 
 
 def _test_read_fasta_correct(filepath: Path):
     deflines = ["ID1", "ID2", "ID3", "ID4"]
     sequences = ["GAGUUA", "CAUAACAAATT", "AAGAA", "AAGAA"]
 
-    f = open_fasta(filepath)
+    f = read_fasta(filepath)
     item = f.read_item()
     assert item.defline == deflines[0]
     assert item.id == deflines[0]
@@ -40,25 +40,25 @@ def _test_read_fasta_correct(filepath: Path):
 
     f.close()
 
-    f = open_fasta(filepath)
+    f = read_fasta(filepath)
     for i, item in enumerate(f):
         assert item.defline == deflines[i]
         assert item.sequence == sequences[i]
     f.close()
 
-    f = open_fasta(filepath)
+    f = read_fasta(filepath)
     items = f.read_items()
     for i, defline in enumerate(deflines):
         assert items[i].defline == defline
         assert items[i].sequence == sequences[i]
     f.close()
 
-    with open_fasta(filepath) as f:
+    with read_fasta(filepath) as f:
         for i, item in enumerate(f):
             assert item.defline == deflines[i]
             assert item.sequence == sequences[i]
 
-    with open_fasta(filepath) as f:
+    with read_fasta(filepath) as f:
         f.close()
 
 
@@ -80,7 +80,7 @@ FLFLIKHNPTNTIVYFGRYWSP
         "\n", ""
     ).strip()
 
-    with open_fasta(protein) as file:
+    with read_fasta(protein) as file:
         item = file.read_item()
         assert item.defline == "P01013 GENE X PROTEIN (OVALBUMIN-RELATED)"
         assert item.has_desc
@@ -88,9 +88,9 @@ FLFLIKHNPTNTIVYFGRYWSP
         assert item.id == "P01013"
         assert item.sequence == expected
 
-    assert len(list(open_fasta(protein))) == 1
+    assert len(list(read_fasta(protein))) == 1
 
-    with open_fasta(protein_gzip) as file:
+    with read_fasta(protein_gzip) as file:
         item = file.read_item()
         assert item.defline == "P01013 GENE X PROTEIN (OVALBUMIN-RELATED)"
         assert item.has_desc
@@ -98,24 +98,24 @@ FLFLIKHNPTNTIVYFGRYWSP
         assert item.id == "P01013"
         assert item.sequence == expected
 
-    assert len(list(open_fasta(protein))) == 1
+    assert len(list(read_fasta(protein))) == 1
 
 
 def test_read_fasta_damaged(damaged1, damaged2, damaged3):
 
-    with open_fasta(damaged1) as f:
+    with read_fasta(damaged1) as f:
         with pytest.raises(ParsingError) as excinfo:
             f.read_item()
         e: ParsingError = excinfo.value
         assert e.line_number == 1
 
-    with open_fasta(damaged2) as f:
+    with read_fasta(damaged2) as f:
         with pytest.raises(ParsingError) as excinfo:
             f.read_item()
         e: ParsingError = excinfo.value
         assert e.line_number == 2
 
-    with open_fasta(damaged3) as f:
+    with read_fasta(damaged3) as f:
         f.read_item()
         with pytest.raises(ParsingError) as excinfo:
             f.read_item()
@@ -133,7 +133,20 @@ def test_write_fasta(tmp_path: Path):
         writer.write_item(defline[0], sequence[0])
         writer.write_item(defline[1], sequence[1])
 
-    with open_fasta("output.faa") as reader:
+    with read_fasta("output.faa") as reader:
+        item = reader.read_item()
+        assert item.defline == defline[0]
+        assert item.sequence == sequence[0]
+
+        item = reader.read_item()
+        assert item.defline == defline[1]
+        assert item.sequence == sequence[1]
+
+    with write_fasta("output.faa.xz") as writer:
+        writer.write_item(defline[0], sequence[0])
+        writer.write_item(defline[1], sequence[1])
+
+    with read_fasta("output.faa.xz") as reader:
         item = reader.read_item()
         assert item.defline == defline[0]
         assert item.sequence == sequence[0]

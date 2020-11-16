@@ -7,7 +7,7 @@ from typing import IO, Iterator, List, Union
 from more_itertools import peekable
 from xopen import xopen
 
-__all__ = ["ParsingError", "FASTAItem", "FASTAParser", "open_fasta"]
+__all__ = ["ParsingError", "FASTAItem", "FASTAReader", "read_fasta"]
 
 
 class ParsingError(Exception):
@@ -120,9 +120,9 @@ class FASTAItem:
         return copy(self)
 
 
-class FASTAParser:
+class FASTAReader:
     """
-    FASTA parser.
+    FASTA reader.
     """
 
     def __init__(self, file: Union[str, pathlib.Path, IO[str]]):
@@ -228,7 +228,7 @@ class FASTAParser:
         self.close()
 
 
-def open_fasta(file: Union[str, pathlib.Path, IO[str]]) -> FASTAParser:
+def read_fasta(file: Union[str, pathlib.Path, IO[str]]) -> FASTAReader:
     """
     Open a FASTA file for reading.
 
@@ -239,6 +239,6 @@ def open_fasta(file: Union[str, pathlib.Path, IO[str]]) -> FASTAParser:
 
     Returns
     -------
-    FASTA parser.
+    FASTA reader.
     """
-    return FASTAParser(file)
+    return FASTAReader(file)

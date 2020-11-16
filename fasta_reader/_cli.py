@@ -2,7 +2,7 @@ from statistics import mean
 
 import click
 
-from ._parser import open_fasta
+from ._reader import read_fasta
 from ._version import __version__
 
 
@@ -13,7 +13,7 @@ def cli(fasta):
     """
     Show information about FASTA files.
     """
-    with open_fasta(fasta) as parser:
+    with read_fasta(fasta) as parser:
         items = parser.read_items()
 
     nitems = len(items)

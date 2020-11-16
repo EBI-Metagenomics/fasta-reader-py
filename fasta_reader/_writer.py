@@ -1,6 +1,8 @@
 import pathlib
 from typing import IO, Union
 
+from xopen import xopen
+
 __all__ = ["FASTAWriter", "write_fasta"]
 
 
@@ -22,7 +24,7 @@ class FASTAWriter:
             file = pathlib.Path(file)
 
         if isinstance(file, pathlib.Path):
-            file = open(file, "w")
+            file = xopen(file, "w")
 
         self._file = file
         self._ncols = ncols
