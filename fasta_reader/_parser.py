@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import pathlib
 from dataclasses import dataclass
 from typing import IO, Iterator, List, Union
@@ -106,7 +104,7 @@ class FASTAItem:
         yield self.defline
         yield self.sequence
 
-    def copy(self) -> FASTAItem:
+    def copy(self) -> "FASTAItem":
         """
         Copy of itself.
 
