@@ -16,7 +16,12 @@ from ._writer import write_fasta
     "--hist/--no-hist", default=False, help="Show histogram of sequence lengths."
 )
 @click.option("--ncols", default=0, help="Show formatted sequences.")
-def cli(fasta, stats: bool, hist: bool, ncols: int):
+@click.option(
+    "--upper/--no-upper",
+    default=False,
+    help="Convert sequence symbols to uppercase.",
+)
+def cli(fasta, stats: bool, hist: bool, ncols: int, upper: bool):
     """
     Show information about FASTA files.
 
@@ -32,7 +37,11 @@ def cli(fasta, stats: bool, hist: bool, ncols: int):
     seq_lens = []
     for item in read_fasta(fasta):
         seq_lens.append(len(item.sequence))
-        abc |= set(item.sequence)
+        if upper:
+            seq = item.sequence.upper()
+        else:
+            seq = item.sequence
+        abc |= set(seq)
         nitems += 1
 
     if stats:
@@ -48,7 +57,11 @@ def cli(fasta, stats: bool, hist: bool, ncols: int):
     if ncols > 0:
         with write_fasta(sys.stdout, ncols) as writer:
             for item in read_fasta(fasta):
-                writer.write_item(item.defline, item.sequence)
+                if upper:
+                    seq = item.sequence.upper()
+                else:
+                    seq = item.sequence
+                writer.write_item(item.defline, seq)
 
 
 def show_hist(seq_lengths):
