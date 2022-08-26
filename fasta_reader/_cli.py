@@ -5,12 +5,10 @@ import click
 import plotille
 
 from ._reader import read_fasta
-from ._version import __version__
 from ._writer import write_fasta
 
 
 @click.command(context_settings=dict(help_option_names=["-h", "--help"]))
-@click.version_option(__version__)
 @click.argument("fasta", type=click.Path(exists=True))
 @click.option("--stats/--no-stats", default=True, help="Show sequence statistics.")
 @click.option(
