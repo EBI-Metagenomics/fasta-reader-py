@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from os import PathLike
 from pathlib import Path
 from typing import IO, Iterator, List, Union
 
@@ -125,24 +126,15 @@ class FASTAReader:
     FASTA reader.
     """
 
-    def __init__(self, file: Union[str, Path, IO[str]]):
+    def __init__(self, filepath: Union[str, bytes, PathLike]):
         """
         Parameters
         ----------
         file
             File path or IO stream.
         """
-        if isinstance(file, str):
-            file = Path(file)
-
-        if hasattr(file, "strpath"):
-            file = Path(str(file))
-
-        if isinstance(file, Path):
-            file = xopen(file, "r")
-
-        self._file = file
-        self._lines = peekable(line for line in file)
+        self._file = xopen(filepath, "r")
+        self._lines = peekable(line for line in self._file)
         self._line_number = 0
 
     def read_item(self) -> FASTAItem:

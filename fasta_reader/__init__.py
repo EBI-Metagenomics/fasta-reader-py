@@ -3,7 +3,7 @@ from ._cli import cli
 from ._reader import FASTAItem, FASTAReader, ParsingError, read_fasta
 from ._writer import FASTAWriter, write_fasta
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 __all__ = [
     "FASTAItem",
