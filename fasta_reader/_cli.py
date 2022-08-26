@@ -2,6 +2,7 @@ import sys
 from statistics import mean
 
 import click
+import plotille
 
 from ._reader import read_fasta
 from ._version import __version__
@@ -65,6 +66,5 @@ def cli(fasta, stats: bool, hist: bool, ncols: int, upper: bool):
 
 
 def show_hist(seq_lengths):
-    import plotille
 
     click.echo(plotille.hist(seq_lengths))
