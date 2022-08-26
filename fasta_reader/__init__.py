@@ -1,4 +1,4 @@
-"""FASTA file reader/writer."""
+"""FASTA file reader/writer"""
 from ._cli import cli
 from ._reader import FASTAItem, FASTAReader, ParsingError, read_fasta
 from ._writer import FASTAWriter, write_fasta

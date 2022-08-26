@@ -12,7 +12,6 @@ dynamic = ["version", "description"]
 requires-python = ">=3.8,<4"
 dependencies = [
     "click>=7.1.2",
-    "importlib-resources>=1.4.0",
     "more-itertools>=8.4.0",
     "xopen>=1.0.1",
     "plotille>=3.8.0",
@@ -22,9 +21,18 @@ dependencies = [
 Home = "https://github.com/EBI-Metagenomics/fasta-reader-py"
 
 [project.scripts]
-flit = "fasta_reader:cli"
+fasta-show = "fasta_reader:cli"
 
 [project.optional-dependencies]
-test = [
-    "pytest >=6.2.5",
+dev = [
+    "black",
+    "isort",
+    "pyright",
 ]
+test = [
+    "pytest",
+    "pytest-datafiles",
+]
+
+[tool.isort]
+profile = "black"

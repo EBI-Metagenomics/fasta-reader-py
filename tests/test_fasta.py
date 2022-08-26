@@ -5,6 +5,8 @@ import pytest
 
 from fasta_reader import ParsingError, read_fasta, write_fasta
 
+FIXTURE_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "data"
+
 
 def _test_read_fasta_correct(filepath: Path):
     deflines = ["ID1", "ID2", "ID3", "ID4"]
@@ -62,15 +64,25 @@ def _test_read_fasta_correct(filepath: Path):
         f.close()
 
 
-def test_read_fasta_correct1(correct1: Path):
-    _test_read_fasta_correct(correct1)
+@pytest.mark.datafiles(
+    FIXTURE_DIR / "correct1.faa",
+)
+def test_read_fasta_correct1(datafiles):
+    _test_read_fasta_correct(datafiles.listdir()[0])
 
 
-def test_read_fasta_correct2(correct2: Path):
-    _test_read_fasta_correct(correct2)
+@pytest.mark.datafiles(
+    FIXTURE_DIR / "correct2.faa",
+)
+def test_read_fasta_correct2(datafiles):
+    _test_read_fasta_correct(datafiles.listdir()[0])
 
 
-def test_read_fasta_protein(protein: Path, protein_gzip: Path):
+@pytest.mark.datafiles(
+    FIXTURE_DIR / "protein.faa",
+    FIXTURE_DIR / "protein.faa.gz",
+)
+def test_read_fasta_protein(datafiles):
     expected = """
 QIKDLLVSSSTDLDTTLVLVNAIYFKGMWKTAFNAEDTREMPFHVTKQESKPVQMMCMNNSFNVATLPAE
 KMKILELPFASGDLSMLVLLPDEVSDLERIEKTINFEKLTEWTNPNTMEKRRVKVYLPQMKIEEKYNLTS
@@ -79,6 +91,8 @@ FLFLIKHNPTNTIVYFGRYWSP
     """.replace(
         "\n", ""
     ).strip()
+
+    protein, protein_gzip = list(sorted(datafiles.listdir()))
 
     with read_fasta(protein) as file:
         item = file.read_item()
@@ -101,21 +115,28 @@ FLFLIKHNPTNTIVYFGRYWSP
     assert len(list(read_fasta(protein))) == 1
 
 
-def test_read_fasta_damaged(damaged1, damaged2, damaged3):
+@pytest.mark.datafiles(
+    FIXTURE_DIR / "damaged1.faa",
+    FIXTURE_DIR / "damaged2.faa",
+    FIXTURE_DIR / "damaged3.faa",
+)
+def test_read_fasta_damaged(datafiles):
 
-    with read_fasta(damaged1) as f:
+    damaged = list(sorted(datafiles.listdir()))
+
+    with read_fasta(damaged[0]) as f:
         with pytest.raises(ParsingError) as excinfo:
             f.read_item()
         e: ParsingError = excinfo.value
         assert e.line_number == 1
 
-    with read_fasta(damaged2) as f:
+    with read_fasta(damaged[1]) as f:
         with pytest.raises(ParsingError) as excinfo:
             f.read_item()
         e: ParsingError = excinfo.value
         assert e.line_number == 2
 
-    with read_fasta(damaged3) as f:
+    with read_fasta(damaged[2]) as f:
         f.read_item()
         with pytest.raises(ParsingError) as excinfo:
             f.read_item()

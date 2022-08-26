@@ -135,6 +135,9 @@ class FASTAReader:
         if isinstance(file, str):
             file = Path(file)
 
+        if hasattr(file, "strpath"):
+            file = Path(str(file))
+
         if isinstance(file, Path):
             file = xopen(file, "r")
 
