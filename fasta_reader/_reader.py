@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from os import PathLike
-from pathlib import Path
-from typing import IO, Iterator, List, Union
+from typing import Iterator, List, Union
 
 from more_itertools import peekable
 from xopen import xopen
@@ -223,7 +222,7 @@ class FASTAReader:
         self.close()
 
 
-def read_fasta(file: Union[str, Path, IO[str]]) -> FASTAReader:
+def read_fasta(file: Union[str, bytes, PathLike]) -> FASTAReader:
     """
     Open a FASTA file for reading.
 
