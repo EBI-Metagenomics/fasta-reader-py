@@ -9,13 +9,15 @@ from fasta_reader.errors import ParsingError
 FIXTURE_DIR = Path(__file__).parent.resolve() / "data"
 
 CORRECT_FILES = pytest.mark.datafiles(
-    FIXTURE_DIR / "correct1.faa", FIXTURE_DIR / "correct2.faa"
+    FIXTURE_DIR / "correct1.fna",
+    FIXTURE_DIR / "correct2.fna",
 )
 
+EMPTY_SEQUENCES = pytest.mark.datafiles(FIXTURE_DIR / "correct3.fna")
+
 DAMAGED_FILES = pytest.mark.datafiles(
-    FIXTURE_DIR / "damaged1.faa",
-    FIXTURE_DIR / "damaged2.faa",
-    FIXTURE_DIR / "damaged3.faa",
+    FIXTURE_DIR / "damaged1.fna",
+    FIXTURE_DIR / "damaged2.fna",
 )
 
 COMPRESSED_FILE = pytest.mark.datafiles(FIXTURE_DIR / "protein.faa.gz")
@@ -79,6 +81,38 @@ def test_read_trivial_files(datafiles: Path):
             f.close()
 
 
+@EMPTY_SEQUENCES
+def test_read_empty_sequences(datafiles: Path):
+    for file in datafiles.iterdir():
+        deflines = ["ID1", "ID2", "ID3", "ID4"]
+        sequences = ["", "", "", ""]
+
+        f = read_fasta(file)
+        item = f.read_item()
+        assert item.defline == deflines[0]
+        assert item.id == deflines[0]
+        assert not item.has_description
+        assert item.sequence == sequences[0]
+
+        item = f.read_item()
+        assert item.defline == deflines[1]
+        assert item.id == deflines[1]
+        assert not item.has_description
+        assert item.sequence == sequences[1]
+
+        item = f.read_item()
+        assert item.defline == deflines[2]
+        assert item.id == deflines[2]
+        assert not item.has_description
+        assert item.sequence == sequences[2]
+
+        item = f.read_item()
+        assert item.defline == deflines[3]
+        assert item.id == deflines[3]
+        assert not item.has_description
+        assert item.sequence == sequences[3]
+
+
 @DAMAGED_FILES
 def test_read_damaged_files(datafiles: Path):
     damaged = list(sorted(datafiles.iterdir()))
@@ -87,20 +121,14 @@ def test_read_damaged_files(datafiles: Path):
         with pytest.raises(ParsingError) as excinfo:
             f.read_item()
         e: ParsingError = excinfo.value
-        assert e.line_number == 1
+        assert e.line_number == 0
 
     with read_fasta(damaged[1]) as f:
-        with pytest.raises(ParsingError) as excinfo:
-            f.read_item()
-        e: ParsingError = excinfo.value
-        assert e.line_number == 2
-
-    with read_fasta(damaged[2]) as f:
         f.read_item()
         with pytest.raises(ParsingError) as excinfo:
             f.read_item()
         e: ParsingError = excinfo.value
-        assert e.line_number == 4
+        assert e.line_number == 3
 
 
 @COMPRESSED_FILE
