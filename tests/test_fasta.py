@@ -5,124 +5,82 @@ import pytest
 
 from fasta_reader import ParsingError, read_fasta, write_fasta
 
-FIXTURE_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "data"
+FIXTURE_DIR = Path(__file__).parent.resolve() / "data"
 
-
-def _test_read_fasta_correct(filepath: Path):
-    deflines = ["ID1", "ID2", "ID3", "ID4"]
-    sequences = ["GAGUUA", "CAUAACAAATT", "AAGAA", "AAGAA"]
-
-    f = read_fasta(filepath)
-    item = f.read_item()
-    assert item.defline == deflines[0]
-    assert item.id == deflines[0]
-    assert not item.has_desc
-    assert item.sequence == sequences[0]
-
-    item = f.read_item()
-    assert item.defline == deflines[1]
-    assert item.id == deflines[1]
-    assert not item.has_desc
-    assert item.sequence == sequences[1]
-
-    item = f.read_item()
-    assert item.defline == deflines[2]
-    assert item.id == deflines[2]
-    assert not item.has_desc
-    assert item.sequence == sequences[2]
-
-    item = f.read_item()
-    assert item.defline == deflines[3]
-    assert item.id == deflines[3]
-    assert not item.has_desc
-    assert item.sequence == sequences[3]
-
-    with pytest.raises(StopIteration):
-        f.read_item()
-
-    f.close()
-
-    f = read_fasta(filepath)
-    for i, item in enumerate(f):
-        assert item.defline == deflines[i]
-        assert item.sequence == sequences[i]
-    f.close()
-
-    f = read_fasta(filepath)
-    items = f.read_items()
-    for i, defline in enumerate(deflines):
-        assert items[i].defline == defline
-        assert items[i].sequence == sequences[i]
-    f.close()
-
-    with read_fasta(filepath) as f:
-        for i, item in enumerate(f):
-            assert item.defline == deflines[i]
-            assert item.sequence == sequences[i]
-
-    with read_fasta(filepath) as f:
-        f.close()
-
-
-@pytest.mark.datafiles(
-    FIXTURE_DIR / "correct1.faa",
+CORRECT_FILES = pytest.mark.datafiles(
+    FIXTURE_DIR / "correct1.faa", FIXTURE_DIR / "correct2.faa"
 )
-def test_read_fasta_correct1(datafiles):
-    _test_read_fasta_correct(datafiles.listdir()[0])
 
-
-@pytest.mark.datafiles(
-    FIXTURE_DIR / "correct2.faa",
-)
-def test_read_fasta_correct2(datafiles):
-    _test_read_fasta_correct(datafiles.listdir()[0])
-
-
-@pytest.mark.datafiles(
-    FIXTURE_DIR / "protein.faa",
-    FIXTURE_DIR / "protein.faa.gz",
-)
-def test_read_fasta_protein(datafiles):
-    expected = """
-QIKDLLVSSSTDLDTTLVLVNAIYFKGMWKTAFNAEDTREMPFHVTKQESKPVQMMCMNNSFNVATLPAE
-KMKILELPFASGDLSMLVLLPDEVSDLERIEKTINFEKLTEWTNPNTMEKRRVKVYLPQMKIEEKYNLTS
-VLMALGMTDLFIPSANLTGISSAESLKISQAVHGAFMELSEDGIEMAGSTGVIEDIKHSPESEQFRADHP
-FLFLIKHNPTNTIVYFGRYWSP
-    """.replace(
-        "\n", ""
-    ).strip()
-
-    protein, protein_gzip = list(sorted(datafiles.listdir()))
-
-    with read_fasta(protein) as file:
-        item = file.read_item()
-        assert item.defline == "P01013 GENE X PROTEIN (OVALBUMIN-RELATED)"
-        assert item.has_desc
-        assert item.desc == "GENE X PROTEIN (OVALBUMIN-RELATED)"
-        assert item.id == "P01013"
-        assert item.sequence == expected
-
-    assert len(list(read_fasta(protein))) == 1
-
-    with read_fasta(protein_gzip) as file:
-        item = file.read_item()
-        assert item.defline == "P01013 GENE X PROTEIN (OVALBUMIN-RELATED)"
-        assert item.has_desc
-        assert item.desc == "GENE X PROTEIN (OVALBUMIN-RELATED)"
-        assert item.id == "P01013"
-        assert item.sequence == expected
-
-    assert len(list(read_fasta(protein))) == 1
-
-
-@pytest.mark.datafiles(
+DAMAGED_FILES = pytest.mark.datafiles(
     FIXTURE_DIR / "damaged1.faa",
     FIXTURE_DIR / "damaged2.faa",
     FIXTURE_DIR / "damaged3.faa",
 )
-def test_read_fasta_damaged(datafiles):
 
-    damaged = list(sorted(datafiles.listdir()))
+COMPRESSED_FILE = pytest.mark.datafiles(FIXTURE_DIR / "protein.faa.gz")
+
+
+@CORRECT_FILES
+def test_read_trivial_files(datafiles: Path):
+    for file in datafiles.iterdir():
+        deflines = ["ID1", "ID2", "ID3", "ID4"]
+        sequences = ["GAGUUA", "CAUAACAAATT", "AAGAA", "AAGAA"]
+
+        f = read_fasta(file)
+        item = f.read_item()
+        assert item.defline == deflines[0]
+        assert item.id == deflines[0]
+        assert not item.has_desc
+        assert item.sequence == sequences[0]
+
+        item = f.read_item()
+        assert item.defline == deflines[1]
+        assert item.id == deflines[1]
+        assert not item.has_desc
+        assert item.sequence == sequences[1]
+
+        item = f.read_item()
+        assert item.defline == deflines[2]
+        assert item.id == deflines[2]
+        assert not item.has_desc
+        assert item.sequence == sequences[2]
+
+        item = f.read_item()
+        assert item.defline == deflines[3]
+        assert item.id == deflines[3]
+        assert not item.has_desc
+        assert item.sequence == sequences[3]
+
+        with pytest.raises(StopIteration):
+            f.read_item()
+
+        f.close()
+
+        f = read_fasta(file)
+        for i, item in enumerate(f):
+            assert item.defline == deflines[i]
+            assert item.sequence == sequences[i]
+        f.close()
+
+        f = read_fasta(file)
+        items = f.read_items()
+        for i, defline in enumerate(deflines):
+            assert items[i].defline == defline
+            assert items[i].sequence == sequences[i]
+        f.close()
+
+        with read_fasta(file) as f:
+            for i, item in enumerate(f):
+                assert item.defline == deflines[i]
+                assert item.sequence == sequences[i]
+
+        with read_fasta(file) as f:
+            f.close()
+
+
+@DAMAGED_FILES
+def test_read_damaged_files(datafiles: Path):
+    damaged = list(sorted(datafiles.iterdir()))
 
     with read_fasta(damaged[0]) as f:
         with pytest.raises(ParsingError) as excinfo:
@@ -144,8 +102,30 @@ def test_read_fasta_damaged(datafiles):
         assert e.line_number == 4
 
 
-def test_write_fasta(tmp_path: Path):
+@COMPRESSED_FILE
+def test_read_compressed_file(datafiles: Path):
+    expected = """
+QIKDLLVSSSTDLDTTLVLVNAIYFKGMWKTAFNAEDTREMPFHVTKQESKPVQMMCMNNSFNVATLPAE
+KMKILELPFASGDLSMLVLLPDEVSDLERIEKTINFEKLTEWTNPNTMEKRRVKVYLPQMKIEEKYNLTS
+VLMALGMTDLFIPSANLTGISSAESLKISQAVHGAFMELSEDGIEMAGSTGVIEDIKHSPESEQFRADHP
+FLFLIKHNPTNTIVYFGRYWSP
+    """.replace(
+        "\n", ""
+    ).strip()
 
+    file = next(datafiles.iterdir())
+    assert len(list(read_fasta(file))) == 1
+
+    with read_fasta(file) as reader:
+        item = reader.read_item()
+        assert item.defline == "P01013 GENE X PROTEIN (OVALBUMIN-RELATED)"
+        assert item.has_desc
+        assert item.desc == "GENE X PROTEIN (OVALBUMIN-RELATED)"
+        assert item.id == "P01013"
+        assert item.sequence == expected
+
+
+def test_write_file(tmp_path: Path):
     defline = ["defline1", "defline2 description"]
     sequence = ["ABCD", "ABCD" * 100]
 
