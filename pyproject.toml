@@ -1,38 +1,28 @@
-[build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
-
-[project]
+[tool.poetry]
 name = "fasta_reader"
-authors = [{name = "Danilo Horta", email = "danilo.horta@pm.me"}]
+version = "1.0.4"
+description = "FASTA file reader/writer."
+authors = ["Danilo Horta <fdanilo.horta@pm.me>"]
+repository = "https://github.com/EBI-Metagenomics/fasta-reader"
+license = "MIT"
 readme = "README.md"
-license = {file = "LICENSE"}
-classifiers = ["License :: OSI Approved :: MIT License"]
-dynamic = ["version", "description"]
-requires-python = ">=3.8,<4"
-dependencies = [
-    "click>=7.1.2",
-    "more-itertools>=8.4.0",
-    "xopen>=1.0.1",
-    "plotille>=3.8.0",
-]
+packages = [{ include = "fasta_reader" }]
 
-[project.urls]
-Home = "https://github.com/EBI-Metagenomics/fasta-reader-py"
+[tool.poetry.dependencies]
+python = "^3.9"
+click = ">=7.1.2"
+more-itertools = ">=8.4.0"
+xopen = ">=1.0.1"
+plotille = ">=3.8.0"
 
-[project.scripts]
-fasta-show = "fasta_reader:cli"
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.2.0"
+deptry = ">=0.6.4"
+pre-commit = ">=2.20.0"
 
-[project.optional-dependencies]
-dev = [
-    "black",
-    "isort",
-    "pyright",
-]
-test = [
-    "pytest",
-    "pytest-datafiles",
-]
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
-[tool.isort]
-profile = "black"
+[tool.poetry.scripts]
+fasta-show = 'fasta_reader.cli:app'

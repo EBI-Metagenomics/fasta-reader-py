@@ -1,8 +1,27 @@
-# fasta-reader-py
+# Welcome to fasta-reader 👋
 
-FASTA file reader/writer.
+> Read and write FASTA file
 
-## Examples
+### 🏠 [Homepage](https://github.com/EBI-Metagenomics/fasta-reader-py)
+
+## ⚡️ Requirements
+
+- Python >= 3.9
+- Pip
+
+## Install
+
+```sh
+pip install fasta-reader
+```
+
+## Usage
+
+```
+
+```
+
+## Example
 
 Open a file and loop over its contents.
 
@@ -38,16 +57,10 @@ with write_fasta("output.faa.gz") as file:
     file.write_item("id2 gene x protein", "TUUA")
 ```
 
-## Install
+## 👤 Author
 
-```bash
-pip install fasta-reader
-```
+- [Danilo Horta](https://github.com/horta)
 
-## Author
+## Show your support
 
-* [Danilo Horta](https://github.com/horta)
-
-## License
-
-This project is licensed under the [MIT License](https://raw.githubusercontent.com/EBI-Metagenomics/fasta-reader-py/master/LICENSE.md).
+Give a ⭐️ if this project helped you!
