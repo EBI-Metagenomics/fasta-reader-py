@@ -31,25 +31,25 @@ def test_read_trivial_files(datafiles: Path):
         item = f.read_item()
         assert item.defline == deflines[0]
         assert item.id == deflines[0]
-        assert not item.has_desc
+        assert not item.has_description
         assert item.sequence == sequences[0]
 
         item = f.read_item()
         assert item.defline == deflines[1]
         assert item.id == deflines[1]
-        assert not item.has_desc
+        assert not item.has_description
         assert item.sequence == sequences[1]
 
         item = f.read_item()
         assert item.defline == deflines[2]
         assert item.id == deflines[2]
-        assert not item.has_desc
+        assert not item.has_description
         assert item.sequence == sequences[2]
 
         item = f.read_item()
         assert item.defline == deflines[3]
         assert item.id == deflines[3]
-        assert not item.has_desc
+        assert not item.has_description
         assert item.sequence == sequences[3]
 
         with pytest.raises(StopIteration):
@@ -120,8 +120,8 @@ FLFLIKHNPTNTIVYFGRYWSP
     with read_fasta(file) as reader:
         item = reader.read_item()
         assert item.defline == "P01013 GENE X PROTEIN (OVALBUMIN-RELATED)"
-        assert item.has_desc
-        assert item.desc == "GENE X PROTEIN (OVALBUMIN-RELATED)"
+        assert item.has_description
+        assert item.description == "GENE X PROTEIN (OVALBUMIN-RELATED)"
         assert item.id == "P01013"
         assert item.sequence == expected
 

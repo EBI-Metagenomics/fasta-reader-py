@@ -34,13 +34,13 @@ class Item:
 
     @id.setter
     def id(self, val: str):
-        if self.has_desc:
-            self.defline = val + " " + self.desc
+        if self.has_description:
+            self.defline = val + " " + self.description
         else:
             self.defline = val
 
     @property
-    def has_desc(self) -> bool:
+    def has_description(self) -> bool:
         """
         Does it has description?
 
@@ -51,7 +51,7 @@ class Item:
         return len(self.defline.split()) > 1
 
     @property
-    def desc(self) -> str:
+    def description(self) -> str:
         """
         Description (if any).
 
@@ -66,7 +66,7 @@ class Item:
         RuntimeError
             If it has no description.
         """
-        if not self.has_desc:
+        if not self.has_description:
             raise RuntimeError("It does not have a description.")
         tgt_id = self.id
         return self.defline[len(tgt_id) + 1 :]
