@@ -7,7 +7,6 @@
 ## ⚡️ Requirements
 
 - Python >= 3.9
-- Pip
 
 ## Install
 
@@ -15,46 +14,29 @@
 pip install fasta-reader
 ```
 
-## Usage
+## Examples
 
-```
-
-```
-
-## Example
-
-Open a file and loop over its contents.
+The following example show that it can read a compressed file remotely seamlessly:
 
 ```python
 from fasta_reader import read_fasta
 
-for item in read_fasta("fasta_reader/test/correct1.faa"):
-  print(item)
-# FASTAItem(defline='ID1', sequence='GAGUUA')
-# FASTAItem(defline='ID2', sequence='CAUAACAAATT')
-# FASTAItem(defline='ID3', sequence='AAGAA')
-# FASTAItem(defline='ID4', sequence='AAGAA')
+ROOT = "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/009/858/895"
+REF = "GCF_009858895.2_ASM985889v3"
+FILE = f"{ROOT}/{REF}/{REF}_genomic.fna.gz"
+
+print("Severe acute respiratory syndrome coronavirus 2:")
+for item in read_fasta(FILE):
+    print(item)
 ```
 
-Open a compressed file and show the first item.
-
-```python
-from fasta_reader import read_fasta
-
-with read_fasta("fasta_reader/test/protein.faa.gz") as file:
-    item = file.read_item()
-    print(item.defline, item.sequence[:10] + "...")
-# P01013 GENE X PROTEIN (OVALBUMIN-RELATED) QIKDLLVSSS...
-```
-
-Write to `output.faa.gz`.
+We can also write a FASTA file in a compressed format directly:
 
 ```python
 from fasta_reader import write_fasta
 
-with write_fasta("output.faa.gz") as file:
-    file.write_item("id1 gene x protein", "AGUTAGA")
-    file.write_item("id2 gene x protein", "TUUA")
+with write_fasta("protein.faa.gz") as file:
+    file.write_item("P01013 GENE X PROTEIN", "QIKDLLVSSSTDLDT...")
 ```
 
 ## 👤 Author
