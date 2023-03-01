@@ -3,7 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from fasta_reader import ParsingError, read_fasta, write_fasta
+from fasta_reader import read_fasta, write_fasta
+from fasta_reader.errors import ParsingError
 
 FIXTURE_DIR = Path(__file__).parent.resolve() / "data"
 
