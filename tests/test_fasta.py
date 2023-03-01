@@ -14,6 +14,7 @@ CORRECT_FILES = pytest.mark.datafiles(
 )
 
 EMPTY_SEQUENCES = pytest.mark.datafiles(FIXTURE_DIR / "correct3.fna")
+EMPTY_FILE = pytest.mark.datafiles(FIXTURE_DIR / "empty.fna")
 
 DAMAGED_FILES = pytest.mark.datafiles(
     FIXTURE_DIR / "damaged1.fna",
@@ -111,6 +112,14 @@ def test_read_empty_sequences(datafiles: Path):
         assert item.id == deflines[3]
         assert not item.has_description
         assert item.sequence == sequences[3]
+
+
+@EMPTY_FILE
+def test_read_empty_file(datafiles: Path):
+    for file in datafiles.iterdir():
+        f = read_fasta(file)
+        with pytest.raises(StopIteration):
+            f.read_item()
 
 
 @DAMAGED_FILES
