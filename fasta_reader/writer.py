@@ -1,6 +1,5 @@
 from typing import TextIO
 
-
 __all__ = ["Writer"]
 
 
@@ -38,9 +37,6 @@ class Writer:
             self._stream.write(seq + "\n")
 
     def close(self):
-        """
-        Close the associated stream.
-        """
         self._stream.close()
 
     def __enter__(self):

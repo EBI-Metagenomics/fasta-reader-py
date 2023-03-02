@@ -30,7 +30,7 @@ class Item:
         -------
         Identification.
         """
-        return self.defline.split()[0]
+        return self.defline.split(maxsplit=1)[0]
 
     @id.setter
     def id(self, val: str):

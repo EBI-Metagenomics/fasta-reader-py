@@ -1,6 +1,4 @@
-from typing import Iterator, List, TextIO, Optional
-from io import TextIOWrapper
-import fsspec
+from typing import Iterator, List, TextIO
 
 from fasta_reader.errors import ParsingError
 from fasta_reader.item import Item
@@ -13,35 +11,18 @@ class Reader:
     FASTA reader.
     """
 
-    def __init__(self, uri):
+    def __init__(self, stream: TextIO):
         """
         Parameters
         ----------
         file
             Readable stream of text.
         """
-        self._uri = uri
-        self._stream: Optional[TextIO] = None
+        self._stream = stream
         self._line_number = -1
         self._line: str = ""
         self._eof = False
-
-    def open(self):
-        of = fsspec.open(self._uri, "rt", compression="infer")
-        assert isinstance(of, fsspec.core.OpenFile)
-
-        stream = of.open()
-        isinstance(stream, TextIOWrapper)
-
-        self._stream = stream
         self._readline()
-
-    def close(self):
-        """
-        Close the associated stream.
-        """
-        assert self._stream
-        self._stream.close()
 
     def read_item(self) -> Item:
         """
@@ -51,9 +32,6 @@ class Reader:
         -------
         Next item.
         """
-        if not self._stream:
-            self.open()
-
         self._skip_blanklines()
         if self._eof:
             raise StopIteration
@@ -70,8 +48,16 @@ class Reader:
         """
         return list(self)
 
+    def close(self):
+        self._stream.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        self.close()
+
     def _readline(self):
-        assert self._stream
         line = self._stream.readline()
         self._eof = not line
         if self._eof:
@@ -100,18 +86,8 @@ class Reader:
         return "".join(lines)
 
     def __iter__(self) -> Iterator[Item]:
-        if not self._stream:
-            self.open()
-
         while True:
             try:
                 yield self.read_item()
             except StopIteration:
                 return
-
-    def __enter__(self):
-        self.open()
-        return self
-
-    def __exit__(self, *_):
-        self.close()

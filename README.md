@@ -25,7 +25,6 @@ ROOT = "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/009/858/895"
 REF = "GCF_009858895.2_ASM985889v3"
 FILE = f"{ROOT}/{REF}/{REF}_genomic.fna.gz"
 
-print("Severe acute respiratory syndrome coronavirus 2:")
 for item in read_fasta(FILE):
     print(item)
 ```

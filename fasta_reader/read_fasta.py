@@ -1,10 +1,13 @@
-from fasta_reader.filepath import FilePath
+import fsspec
+
+from fasta_reader.anyfile import AnyFile
 from fasta_reader.reader import Reader
+from fasta_reader.uri import URI
 
 __all__ = ["read_fasta"]
 
 
-def read_fasta(uri: FilePath) -> Reader:
+def read_fasta(uri: URI) -> Reader:
     """
     Open a FASTA file for reading.
 
@@ -17,4 +20,14 @@ def read_fasta(uri: FilePath) -> Reader:
     -------
     FASTA reader.
     """
-    return Reader(uri)
+    of = fsspec.open(uri, "rt", compression="infer")
+    assert isinstance(of, fsspec.core.OpenFile)
+
+    try:
+        stream = of.open()
+        isinstance(stream, fsspec.core.PickleableTextIOWrapper)
+    except Exception:
+        of.close()
+        raise
+
+    return Reader(AnyFile(of, stream))

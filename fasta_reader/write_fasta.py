@@ -1,21 +1,33 @@
+import fsspec
+
+from fasta_reader.anyfile import AnyFile
+from fasta_reader.uri import URI
 from fasta_reader.writer import Writer
-from fasta_reader.filepath import FilePath
-from xopen import xopen
 
 __all__ = ["write_fasta"]
 
 
-def write_fasta(filename: FilePath, ncols=60) -> Writer:
+def write_fasta(uri: URI, ncols=60) -> Writer:
     """
     Open a FASTA file for writing.
 
     Parameters
     ----------
-    file
-        File path.
+    uri
+        Local or remote file address.
 
     Returns
     -------
     FASTA writer.
     """
-    return Writer(xopen(filename, "w"), ncols)
+    of = fsspec.open(uri, "wt", compression="infer")
+    assert isinstance(of, fsspec.core.OpenFile)
+
+    try:
+        stream = of.open()
+        isinstance(stream, fsspec.core.PickleableTextIOWrapper)
+    except Exception:
+        of.close()
+        raise
+
+    return Writer(AnyFile(of, stream), ncols)
