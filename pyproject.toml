@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fasta-reader"
-version = "3.0.0"
+version = "3.0.1"
 description = "FASTA file reader/writer."
 authors = ["Danilo Horta <fdanilo.horta@pm.me>"]
 repository = "https://github.com/EBI-Metagenomics/fasta-reader"
@@ -12,7 +12,7 @@ packages = [{ include = "fasta_reader" }]
 python = "^3.9"
 more-itertools = ">=9.1.0"
 xopen = ">=1.7.0"
-fsspec = { version = ">=2023.1.0", extras = ["http", "sftp", "s3", "github"] }
+fsspec = { version = ">=2023.1.0", extras = ["http", "sftp"] }
 
 [tool.poetry.group.dev.dependencies]
 deptry = ">=0.6.4"
