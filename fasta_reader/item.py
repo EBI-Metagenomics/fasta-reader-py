@@ -86,3 +86,13 @@ class Item:
         from copy import copy
 
         return copy(self)
+
+    def __str__(self):
+        defline = shorten(self.defline, 200)
+        seq = shorten(self.sequence, 200)
+        return f"Item(defline='{defline}', sequence='{seq}')"
+
+
+def shorten(x: str, n: int):
+    m = int(n / 2)
+    return x if len(x) <= n else (x[:m] + "..." + x[-m:])[:n]
