@@ -25,7 +25,7 @@ def read_fasta(uri: URI) -> Reader:
 
     try:
         stream = of.open()
-        isinstance(stream, fsspec.core.PickleableTextIOWrapper)
+        assert isinstance(stream, fsspec.core.PickleableTextIOWrapper)
     except Exception:
         of.close()
         raise
