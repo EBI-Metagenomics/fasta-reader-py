@@ -12,8 +12,8 @@ def chunks(lst, n):
 
 
 class Formatter:
-    def __init__(self, chunk_size=8, width=80):
-        self._chunk_size = chunk_size
+    def __init__(self, chunk=8, width=80):
+        self._chunk_size = chunk
         self._width = width
 
     def format(self, x: Item):

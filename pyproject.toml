@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fasta-reader"
-version = "3.1.0"
+version = "3.1.1"
 description = "FASTA file reader/writer."
 authors = ["Danilo Horta <fdanilo.horta@pm.me>"]
 repository = "https://github.com/EBI-Metagenomics/fasta-reader"
