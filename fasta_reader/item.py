@@ -18,8 +18,25 @@ class Item:
         Sequence.
     """
 
-    defline: str
-    sequence: str
+    def __init__(self, defline: str, sequence: str):
+        self._defline = defline
+        self._sequence = sequence
+
+    @property
+    def defline(self):
+        return self._defline
+
+    @defline.setter
+    def defline(self, x: str):
+        self._defline = x
+
+    @property
+    def sequence(self):
+        return "".join(self._sequence.split())
+
+    @sequence.setter
+    def sequence(self, x: str):
+        self._sequence = x
 
     @property
     def id(self) -> str:
